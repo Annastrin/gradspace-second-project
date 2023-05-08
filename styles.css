@@ -1,0 +1,50 @@
+body {
+  padding: 50px 0;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+h2, .h2 {
+  font-size: 1.2rem;
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.product-card {
+  display: block;
+  width: 25%;
+  padding: 10px;
+  position: relative;
+}
+
+.product-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 5px;
+  background-color: #000;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.product-card:hover::after {
+  opacity: 0.2;
+}
+
+.product-image {
+  max-width: 100%;
+  margin-bottom: 10px;
+}
+
+.product-title {
+  color: rgb(33, 37, 41);
+}
