@@ -13,7 +13,12 @@ h2, .h2 {
 
 .pagination {
   justify-content: center;
+  flex-wrap: wrap;
   margin-bottom: 15px;
+}
+
+.page-item {
+  margin-bottom: 5px;
 }
 
 .page-link {
