@@ -11,6 +11,26 @@ h2, .h2 {
   font-size: 1.2rem;
 }
 
+.pagination {
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.page-link {
+  color: #c48f45;
+  cursor: pointer;
+}
+
+.page-link:hover {
+  color: #c48f45;
+}
+
+.page-link.active {
+  border-color: #c48f45;
+  background-color: #c48f45;
+  color: #fff;
+}
+
 .product-card {
   display: block;
   padding: 10px;
@@ -40,7 +60,7 @@ h2, .h2 {
 }
 
 .product-title {
-  color: var(--bs-body-color-rgb);
+  color: var(--bs-secondary-text-emphasis);
 }
 
 .product-price {
