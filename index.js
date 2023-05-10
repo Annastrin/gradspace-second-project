@@ -34,7 +34,6 @@ function renderProducts(products) {
 
 function renderProductDetails(productId) {
   const product = products.find((prod) => prod.prodId === productId)
-  console.trace(product)
   const productContainer = document.getElementById("main-content")
   productContainer.innerHTML = ""
   productContainer.className = "product-container row"
@@ -224,7 +223,6 @@ window.addEventListener(
   function (event) {
     const url = document.location.search.toLowerCase()
     renderContent(url)
-    console.trace(event)
   },
   false
 )
