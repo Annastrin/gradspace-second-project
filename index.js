@@ -30,6 +30,31 @@ function renderNavigation(pagesNum, currentPage) {
   const pagesContainer = document.getElementById("pagination")
   pagesContainer.innerHTML = ""
 
+  const prevPageLink = document.createElement("li")
+  prevPageLink.classList.add("page-item")
+
+  if (currentPage === null || currentPage === 1) {
+    prevPageLink.classList.add("disabled")
+  }
+  prevPageLink.innerHTML = `
+    <a class="page-link" aria-label="Previous" onclick="handlePrevClick()">
+      <span aria-hidden="true">&laquo;</span>
+    </a>
+  `
+  const nextPageLink = document.createElement("li")
+  nextPageLink.classList.add("page-item")
+
+  if (currentPage === 11) {
+    nextPageLink.classList.add("disabled")
+  }
+
+  nextPageLink.innerHTML = `
+    <a class="page-link" aria-label="Next" onclick="handleNextClick()">
+      <span aria-hidden="true">&raquo;</span>
+    </a>
+  `
+  pagesContainer.appendChild(prevPageLink)
+
   for (let i = 0; i < pagesNum; i++) {
     const pageItem = document.createElement("li")
     let pageLinkContent
@@ -47,6 +72,30 @@ function renderNavigation(pagesNum, currentPage) {
     pageItem.innerHTML = pageLinkContent
     pageItem.className = "page-item"
     pagesContainer.appendChild(pageItem)
+  }
+
+  pagesContainer.appendChild(nextPageLink)
+}
+
+function handlePageClick(el, pageNum) {
+  const activePageLink = document.querySelector(".page-link.active")
+  activePageLink && activePageLink.classList.remove("active")
+  el.classList.add("active")
+  eventedPushState({}, "", `?page=${pageNum}`)
+}
+
+function handlePrevClick() {
+  const page = Number(new URLSearchParams(document.location.search).get("page"))
+  if (page > 1) {
+    eventedPushState({}, "", `?page=${page - 1}`)
+  }
+}
+
+function handleNextClick() {
+  const page =
+    Number(new URLSearchParams(document.location.search).get("page")) || 1
+  if (page < 11) {
+    eventedPushState({}, "", `?page=${page + 1}`)
   }
 }
 
