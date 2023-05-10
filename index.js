@@ -2,12 +2,23 @@ const products = rawdata.filter((product) => product.productMedia.length > 0)
 const imagesUrl = "https://storage.googleapis.com/luxe_media/wwwroot/"
 
 function renderProducts(products) {
-  const productsContainer = document.getElementById("product-container")
-  productsContainer.innerHTML = ""
-  products.forEach((product, i) => {
+  const content = document.getElementById("main-content")
+
+  const productsContainer = document.createElement("div")
+  productsContainer.className = "product-container row"
+  productsContainer.classList.add(
+    "row-cols-1",
+    "row-cols-sm-2",
+    "row-cols-lg-4"
+  )
+  content.appendChild(productsContainer)
+
+  products.forEach((product) => {
     const productElement = document.createElement("div")
     const productCard = `
-      <a class="product-card" href="./products/${product.prodId}">
+      <a class="product-card" onclick="handleProductCardClick(${
+        product.prodId
+      })">
         <img src="${
           imagesUrl + product.productMedia[0].url
         }" alt="" class="product-image"/>
@@ -21,14 +32,58 @@ function renderProducts(products) {
   })
 }
 
+function renderProductDetails(productId) {
+  const product = products.find((prod) => prod.prodId === productId)
+  console.trace(product)
+  const productContainer = document.getElementById("main-content")
+  productContainer.innerHTML = ""
+  productContainer.className = "product-container row"
+
+  const productHasMultipleImages = product.productMedia.length > 1
+  let productImage
+
+  if (productHasMultipleImages) {
+    productImage = `
+      <img src="${imagesUrl + product.productMedia[0].url}" />
+    `
+  } else {
+    productImage = `
+      <img src="${imagesUrl + product.productMedia[0].url}" />
+    `
+  }
+
+  productContainer.innerHTML = `
+    <div class="col-12 col-md-6">
+      ${productImage}
+    </div>
+    <div class="col-12 col-md-6">
+      <h2>${product.title}</h2>
+      <p>$ ${product.price}</p>
+      <p>${product.description}</p>
+    </div>
+  `
+}
+
+function handleProductCardClick(productId) {
+  eventedPushState({}, "", `?product=${productId}`)
+}
+
 /**
  *
  * @param {number} pagesNum
  * @param {number} currentPage
  */
 function renderNavigation(pagesNum, currentPage) {
-  const pagesContainer = document.getElementById("pagination")
-  pagesContainer.innerHTML = ""
+  const content = document.getElementById("main-content")
+
+  const nav = document.createElement("nav")
+  nav.setAttribute("aria-label", "Page navigation")
+  content.appendChild(nav)
+
+  const ul = document.createElement("ul")
+  ul.classList.add("pagination")
+  ul.setAttribute("id", "pagination")
+  nav.appendChild(ul)
 
   const prevPageLink = document.createElement("li")
   prevPageLink.classList.add("page-item")
@@ -53,7 +108,7 @@ function renderNavigation(pagesNum, currentPage) {
       <span aria-hidden="true">&raquo;</span>
     </a>
   `
-  pagesContainer.appendChild(prevPageLink)
+  ul.appendChild(prevPageLink)
 
   for (let i = 0; i < pagesNum; i++) {
     const pageItem = document.createElement("li")
@@ -71,10 +126,10 @@ function renderNavigation(pagesNum, currentPage) {
 
     pageItem.innerHTML = pageLinkContent
     pageItem.className = "page-item"
-    pagesContainer.appendChild(pageItem)
+    ul.appendChild(pageItem)
   }
 
-  pagesContainer.appendChild(nextPageLink)
+  ul.appendChild(nextPageLink)
 }
 
 function handlePageClick(el, pageNum) {
@@ -113,23 +168,11 @@ function renderPage(page) {
     productsOnPage * page
   )
 
+  const content = document.getElementById("main-content")
+  content.innerHTML = ""
+
   renderNavigation(pagesNum, page)
   renderProducts(productsToShow, productsOnPage)
-}
-
-function initialRender() {
-  const url = new URL(window.location.href.toLowerCase())
-  const page = Number(url.searchParams.get("page")) || 1
-  renderPage(page)
-}
-
-initialRender()
-
-function handlePageClick(el, pageNum) {
-  const activePageLink = document.querySelector(".page-link.active")
-  activePageLink && activePageLink.classList.remove("active")
-  el.classList.add("active")
-  eventedPushState({}, "", `?page=${pageNum}`)
 }
 
 function eventedPushState(state, title, url) {
@@ -144,11 +187,44 @@ function eventedPushState(state, title, url) {
   return history.pushState(state, title, url)
 }
 
+function renderContent(url) {
+  const params = new URLSearchParams(url)
+  const page = params.get("page")
+  const product = params.get("product")
+
+  if (page === null && product === null) {
+    renderPage(1)
+  } else if (page) {
+    renderPage(Number(page))
+  } else if (product) {
+    const productId = Number(product)
+    renderProductDetails(productId)
+  } else {
+    console.log("Something went wrong!")
+  }
+}
+
+function initialRender() {
+  const url = document.location.search.toLowerCase()
+  renderContent(url)
+}
+
+initialRender()
+
 document.addEventListener(
   "onpushstate",
   function (event) {
-    const page = new URLSearchParams(event.detail.url).get("page")
-    renderPage(Number(page))
+    renderContent(event.detail.url)
+  },
+  false
+)
+
+window.addEventListener(
+  "popstate",
+  function (event) {
+    const url = document.location.search.toLowerCase()
+    renderContent(url)
+    console.trace(event)
   },
   false
 )

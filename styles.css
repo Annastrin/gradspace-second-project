@@ -5,10 +5,17 @@ body {
 a {
   text-decoration: none;
   color: #000;
+  cursor: pointer;
 }
 
 h2, .h2 {
   font-size: 1.2rem;
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .pagination {
