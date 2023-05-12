@@ -15,21 +15,28 @@ function renderProducts(products) {
 
   products.forEach((product) => {
     const productElement = document.createElement("div")
+    productElement.className = "col"
+
     const productCard = `
       <a class="product-card" onclick="handleProductCardClick(${
         product.prodId
       })">
-        <img src="${
-          imagesUrl + product.productMedia[0].url
-        }" alt="" class="product-image"/>
+        <div class="product-image-container">
+          <img src="${
+            imagesUrl + product.productMedia[0].url
+          }" alt="" class="product-image"/>
+        </div>
         <h2 class="product-title">${product.title}</h2>
         <p class="product-price">$ ${product.price}</p>
       </a>
     `
-    productElement.className = "col"
     productElement.innerHTML = productCard
     productsContainer.appendChild(productElement)
   })
+}
+
+function handleProductCardClick(productId) {
+  eventedPushState({}, "", `?product=${productId}`)
 }
 
 function renderProductDetails(productId) {
@@ -42,9 +49,7 @@ function renderProductDetails(productId) {
   let productImage
 
   if (productHasMultipleImages) {
-    productImage = `
-      <img src="${imagesUrl + product.productMedia[0].url}" />
-    `
+    productImage = addImageCarousel(product.productMedia)
   } else {
     productImage = `
       <img src="${imagesUrl + product.productMedia[0].url}" />
@@ -52,19 +57,92 @@ function renderProductDetails(productId) {
   }
 
   productContainer.innerHTML = `
-    <div class="col-12 col-md-6">
+    <div class="col-12 mb-4">
+      <div class="nav-buttons">
+          <button class="nav-btn" onclick="handleGoHome()">Home</button>
+          <button class="nav-btn" onclick="handleGoBack()">Back</button>
+        </div>
+      </div>
+    <div class="col-12 col-md-7 mb-4 mb-md-0">
       ${productImage}
     </div>
-    <div class="col-12 col-md-6">
-      <h2>${product.title}</h2>
-      <p>$ ${product.price}</p>
-      <p>${product.description}</p>
+    <div class="col-12 col-md-5">
+      <div class="ms-md-5">
+        <h2>${product.title}</h2>
+        <p>$ ${product.price}</p>
+        <p>${product.description}</p>
+      </div>
     </div>
   `
+  if (productHasMultipleImages) {
+    const carousel = new bootstrap.Carousel("#carousel")
+    carousel.cycle()
+  }
 }
 
-function handleProductCardClick(productId) {
-  eventedPushState({}, "", `?product=${productId}`)
+function addImageCarousel(images) {
+  const carouselElement = document.createElement("div")
+  carouselElement.classList.add("carousel", "slide", "carousel-fade")
+  carouselElement.setAttribute("id", "carousel")
+  carouselElement.setAttribute("data-bs-ride", "carousel")
+
+  const carouselIndicators = document.createElement("div")
+  carouselIndicators.classList.add("carousel-indicators")
+  carouselElement.appendChild(carouselIndicators)
+
+  for (let i = 0; i < images.length; i++) {
+    let indicator = document.createElement("button")
+    if (i === 0) {
+      indicator.classList.add("active")
+      indicator.setAttribute("aria-current", "true")
+    }
+    indicator.setAttribute("type", "button")
+    indicator.setAttribute("data-bs-target", "#carousel")
+    indicator.setAttribute("data-bs-slide-to", `${i}`)
+    indicator.setAttribute("aria-label", `Slide ${i}`)
+    carouselIndicators.appendChild(indicator)
+  }
+
+  const carouselControls = document.createElement("div")
+  carouselControls.innerHTML = `
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  `
+  carouselElement.appendChild(carouselControls)
+
+  const carouselInner = document.createElement("div")
+  carouselInner.classList.add("carousel-inner")
+  carouselElement.appendChild(carouselInner)
+
+  images.forEach((image, index) => {
+    let carouselItem = document.createElement("div")
+    carouselItem.classList.add("carousel-item")
+    if (index === 0) {
+      carouselItem.classList.add("active")
+    }
+    carouselItem.innerHTML = `<img src="${
+      imagesUrl + image.url
+    }" class="d-block w-100" alt="">`
+    carouselInner.appendChild(carouselItem)
+  })
+
+  const carouselWrapper = document.createElement("div")
+  carouselWrapper.appendChild(carouselElement)
+  return carouselWrapper.innerHTML
+}
+
+function handleGoHome() {
+  eventedPushState({}, "", "")
+}
+
+function handleGoBack() {
+  history.back()
 }
 
 /**

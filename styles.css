@@ -8,7 +8,8 @@ a {
   cursor: pointer;
 }
 
-h2, .h2 {
+h2,
+.h2 {
   font-size: 1.2rem;
 }
 
@@ -16,6 +17,19 @@ img {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.nav-btn {
+  background-color: transparent;
+  border: 2px solid #c48f45;
+  border-radius: 5px;
+  margin: 0 10px;
+  padding: 5px 10px;
+  color: #c48f45;
+}
+
+.product-container .nav-buttons {
+  margin: 0 -10px;
 }
 
 .pagination {
@@ -43,6 +57,10 @@ img {
   color: #fff;
 }
 
+.product-container .col {
+  margin-bottom: 20px;
+}
+
 .product-card {
   display: block;
   padding: 10px;
@@ -66,8 +84,15 @@ img {
   opacity: 0.2;
 }
 
+.product-image-container {
+  height: 250px;
+  overflow: hidden;
+}
+
 .product-image {
   max-width: 100%;
+  height: 100%;
+  object-fit: cover;
   margin-bottom: 10px;
 }
 
@@ -77,4 +102,41 @@ img {
 
 .product-price {
   color: var(--bs-secondary-color);
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+  z-index: 2;
+  opacity: 0.75;
+}
+
+.carousel-control-next-icon,
+.carousel-control-prev-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.carousel-indicators [data-bs-target] {
+  width: 10px;
+  height: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+
+.carousel-item img {
+  height: 300px;
+  object-fit: cover;
+}
+
+@media screen and (min-width: 768px) {
+  .carousel-control-next-icon,
+  .carousel-control-prev-icon {
+    width: 3rem;
+    height: 3rem;
+  }
+  .carousel-item img {
+    height: 560px;
+    object-fit: cover;
+  }
 }
