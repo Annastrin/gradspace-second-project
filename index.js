@@ -36,7 +36,7 @@ function renderProducts(products) {
 }
 
 function handleProductCardClick(productId) {
-  eventedPushState({}, "", `?product=${productId}`)
+  eventedPushState({ product_id: productId }, "", `?product=${productId}`)
 }
 
 function renderProductDetails(productId) {
@@ -59,10 +59,10 @@ function renderProductDetails(productId) {
   productContainer.innerHTML = `
     <div class="col-12 mb-4">
       <div class="nav-buttons">
-          <button class="nav-btn" onclick="handleGoHome()">Home</button>
-          <button class="nav-btn" onclick="handleGoBack()">Back</button>
-        </div>
+        <button class="nav-btn" onclick="handleGoHome()">Home</button>
+        <button class="nav-btn" onclick="handleGoBack()">Back</button>
       </div>
+    </div>
     <div class="col-12 col-md-7 mb-4 mb-md-0">
       ${productImage}
     </div>
@@ -138,11 +138,57 @@ function addImageCarousel(images) {
 }
 
 function handleGoHome() {
-  eventedPushState({}, "", "")
+  eventedPushState({ page_id: 1 }, "", "./")
 }
 
 function handleGoBack() {
   history.back()
+}
+
+function renderFilters(category = null) {
+  const content = document.getElementById("main-content")
+
+  const filters = document.createElement("div")
+  filters.classList.add("products-filters")
+
+  const categoriesArr = products[0].prodType.productCategory
+
+  const selectCategoryElement = document.createElement("select")
+  selectCategoryElement.setAttribute("id", "category")
+  selectCategoryElement.setAttribute("name", "category")
+  selectCategoryElement.classList.add("products-categories")
+  selectCategoryElement.onchange = handleCategorySelect
+  filters.appendChild(selectCategoryElement)
+
+  let categoryOption = document.createElement("option")
+  categoryOption.setAttribute("value", "")
+  categoryOption.innerText = "ALL HIRES"
+  selectCategoryElement.appendChild(categoryOption)
+
+  for (let i = 0; i < categoriesArr.length; i++) {
+    categoryOption = document.createElement("option")
+    categoryOption.setAttribute("value", `${categoriesArr[i].categoryId}`)
+    categoryOption.innerText = categoriesArr[i].categoryName
+
+    if (category) {
+      if (categoriesArr[i].categoryId === category) {
+        categoryOption.setAttribute("selected", "")
+      }
+    }
+
+    selectCategoryElement.appendChild(categoryOption)
+  }
+
+  content.appendChild(filters)
+}
+
+function handleCategorySelect() {
+  const categoryId = document.getElementById("category").value
+  if (categoryId) {
+    eventedPushState({ category_id: categoryId }, "", `?category=${categoryId}`)
+  } else {
+    eventedPushState({ page_id: 1 }, "", "./")
+  }
 }
 
 /**
@@ -150,7 +196,7 @@ function handleGoBack() {
  * @param {number} pagesNum
  * @param {number} currentPage
  */
-function renderNavigation(pagesNum, currentPage) {
+function renderNavigation(pagesNum, currentPage, category) {
   const content = document.getElementById("main-content")
 
   const nav = document.createElement("nav")
@@ -169,19 +215,19 @@ function renderNavigation(pagesNum, currentPage) {
     prevPageLink.classList.add("disabled")
   }
   prevPageLink.innerHTML = `
-    <a class="page-link" aria-label="Previous" onclick="handlePrevClick()">
+    <a class="page-link" aria-label="Previous" onclick="handlePrevClick(${category})">
       <span aria-hidden="true">&laquo;</span>
     </a>
   `
   const nextPageLink = document.createElement("li")
   nextPageLink.classList.add("page-item")
 
-  if (currentPage === 11) {
+  if (currentPage === pagesNum) {
     nextPageLink.classList.add("disabled")
   }
 
   nextPageLink.innerHTML = `
-    <a class="page-link" aria-label="Next" onclick="handleNextClick()">
+    <a class="page-link" aria-label="Next" onclick="handleNextClick(${pagesNum}, ${category})">
       <span aria-hidden="true">&raquo;</span>
     </a>
   `
@@ -194,11 +240,11 @@ function renderNavigation(pagesNum, currentPage) {
     if ((currentPage === null && i === 0) || currentPage === i + 1) {
       pageLinkContent = `<a class="page-link active" onclick="handlePageClick(this, ${
         i + 1
-      })">${i + 1}</a>`
+      }, category)">${i + 1}</a>`
     } else {
       pageLinkContent = `<a class="page-link" onclick="handlePageClick(this, ${
         i + 1
-      })">${i + 1}</a>`
+      }, category)">${i + 1}</a>`
     }
 
     pageItem.innerHTML = pageLinkContent
@@ -209,25 +255,49 @@ function renderNavigation(pagesNum, currentPage) {
   ul.appendChild(nextPageLink)
 }
 
-function handlePageClick(el, pageNum) {
+function handlePageClick(el, pageNum, category) {
   const activePageLink = document.querySelector(".page-link.active")
   activePageLink && activePageLink.classList.remove("active")
   el.classList.add("active")
-  eventedPushState({}, "", `?page=${pageNum}`)
-}
-
-function handlePrevClick() {
-  const page = Number(new URLSearchParams(document.location.search).get("page"))
-  if (page > 1) {
-    eventedPushState({}, "", `?page=${page - 1}`)
+  if (category) {
+    eventedPushState(
+      { category_id: category, page_id: pageNum },
+      "",
+      `?category=${category}&page=${pageNum}`
+    )
+  } else {
+    eventedPushState({ page_id: pageNum }, "", `?page=${pageNum}`)
   }
 }
 
-function handleNextClick() {
+function handlePrevClick(category) {
+  const page = Number(new URLSearchParams(document.location.search).get("page"))
+  if (page > 1) {
+    if (category) {
+      eventedPushState(
+        { category_id: category, page_id: page - 1 },
+        "",
+        `?category=${category}&page=${page - 1}`
+      )
+    } else {
+      eventedPushState({ page_id: page - 1 }, "", `?page=${page - 1}`)
+    }
+  }
+}
+
+function handleNextClick(pagesNum, category) {
   const page =
     Number(new URLSearchParams(document.location.search).get("page")) || 1
-  if (page < 11) {
-    eventedPushState({}, "", `?page=${page + 1}`)
+  if (page < pagesNum) {
+    eventedPushState(
+      { category_id: category, page_id: page + 1 },
+      "",
+      `?category=${category}&page=${page + 1}`
+    )
+    if (category) {
+    } else {
+      eventedPushState({ page_id: page + 1 }, "", `?page=${page + 1}`)
+    }
   }
 }
 
@@ -235,12 +305,23 @@ function handleNextClick() {
  *
  * @param {number} page
  */
-function renderPage(page) {
-  const productsNum = products.length
+function renderProductsPage(category = null, page = 1) {
+  let productsToShow
+  let productsNum
+
+  if (category) {
+    productsToShow = products.filter(
+      (product) => product.categoryId === category
+    )
+  } else {
+    productsToShow = products
+  }
+  productsNum = productsToShow.length
+
   const productsOnPage = 20
   const pagesNum = Math.ceil(productsNum / productsOnPage)
 
-  const productsToShow = products.slice(
+  productsToShow = productsToShow.slice(
     productsOnPage * (page - 1),
     productsOnPage * page
   )
@@ -248,8 +329,24 @@ function renderPage(page) {
   const content = document.getElementById("main-content")
   content.innerHTML = ""
 
-  renderNavigation(pagesNum, page)
+  renderNavigation(pagesNum, page, category)
+  renderFilters(category)
   renderProducts(productsToShow, productsOnPage)
+}
+
+function renderPageNotFound() {
+  const content = document.getElementById("main-content")
+  content.innerHTML = `
+    <div class="container text-center">
+      <div class="mb-4">
+        <div class="nav-buttons">
+          <button class="nav-btn" onclick="handleGoHome()">Home</button>
+          <button class="nav-btn" onclick="handleGoBack()">Back</button>
+        </div>
+      </div>
+      <p>Page Not Found :(</p>
+    </div>
+  `
 }
 
 function eventedPushState(state, title, url) {
@@ -268,15 +365,17 @@ function renderContent(url) {
   const params = new URLSearchParams(url)
   const page = params.get("page")
   const product = params.get("product")
+  const category = params.get("category")
 
-  if (page === null && product === null) {
-    renderPage(1)
-  } else if (page) {
-    renderPage(Number(page))
+  if (page === null && product === null && category === null) {
+    renderProductsPage(null, 1)
+  } else if (category || page) {
+    renderProductsPage(Number(category), Number(page) || 1)
   } else if (product) {
     const productId = Number(product)
     renderProductDetails(productId)
   } else {
+    renderPageNotFound()
     console.log("Something went wrong!")
   }
 }

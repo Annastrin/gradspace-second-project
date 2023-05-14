@@ -26,6 +26,24 @@ img {
   margin: 0 10px;
   padding: 5px 10px;
   color: #c48f45;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-btn:hover {
+  background-color: #c48f45;
+  color: #fff;
+}
+
+.products-filters {
+  padding: 0 10px 15px;
+}
+
+.products-categories {
+  border: 1px solid #c48f45;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: transparent;
+  color: #c48f45;
 }
 
 .product-container .nav-buttons {
@@ -55,6 +73,11 @@ img {
   border-color: #c48f45;
   background-color: #c48f45;
   color: #fff;
+}
+
+.disabled > .page-link {
+  color: #c48f45;
+  opacity: 0.6;
 }
 
 .product-container .col {
