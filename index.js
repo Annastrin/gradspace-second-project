@@ -150,15 +150,18 @@ function renderFilters(category = null) {
 
   const filters = document.createElement("div")
   filters.classList.add("products-filters")
+  filters.appendChild(categoriesFilters(category))
 
+  content.appendChild(filters)
+}
+
+function categoriesFilters(category) {
   const categoriesArr = products[0].prodType.productCategory
-
   const selectCategoryElement = document.createElement("select")
   selectCategoryElement.setAttribute("id", "category")
   selectCategoryElement.setAttribute("name", "category")
   selectCategoryElement.classList.add("products-categories")
   selectCategoryElement.onchange = handleCategorySelect
-  filters.appendChild(selectCategoryElement)
 
   let categoryOption = document.createElement("option")
   categoryOption.setAttribute("value", "")
@@ -179,7 +182,7 @@ function renderFilters(category = null) {
     selectCategoryElement.appendChild(categoryOption)
   }
 
-  content.appendChild(filters)
+  return selectCategoryElement
 }
 
 function handleCategorySelect() {
