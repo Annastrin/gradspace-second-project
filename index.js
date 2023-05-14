@@ -243,11 +243,11 @@ function renderNavigation(pagesNum, currentPage, category) {
     if ((currentPage === null && i === 0) || currentPage === i + 1) {
       pageLinkContent = `<a class="page-link active" onclick="handlePageClick(this, ${
         i + 1
-      }, category)">${i + 1}</a>`
+      }, ${category})">${i + 1}</a>`
     } else {
       pageLinkContent = `<a class="page-link" onclick="handlePageClick(this, ${
         i + 1
-      }, category)">${i + 1}</a>`
+      }, ${category})">${i + 1}</a>`
     }
 
     pageItem.innerHTML = pageLinkContent
