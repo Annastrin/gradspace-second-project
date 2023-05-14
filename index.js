@@ -151,17 +151,27 @@ function renderFilters(category = null) {
   const filters = document.createElement("div")
   filters.classList.add("products-filters")
   filters.appendChild(categoriesFilters(category))
+  filters.appendChild(priceFilters())
 
   content.appendChild(filters)
 }
 
 function categoriesFilters(category) {
   const categoriesArr = products[0].prodType.productCategory
+  const selectCategoryContainer = document.createElement("div")
+  selectCategoryContainer.classList.add("products-categories")
+
+  const selectCategoryLabel = document.createElement("label")
+  selectCategoryLabel.setAttribute("for", "category")
+  selectCategoryLabel.innerText = "Category"
+  selectCategoryContainer.appendChild(selectCategoryLabel)
+
   const selectCategoryElement = document.createElement("select")
   selectCategoryElement.setAttribute("id", "category")
   selectCategoryElement.setAttribute("name", "category")
-  selectCategoryElement.classList.add("products-categories")
+  selectCategoryElement.classList.add("filters")
   selectCategoryElement.onchange = handleCategorySelect
+  selectCategoryContainer.appendChild(selectCategoryElement)
 
   let categoryOption = document.createElement("option")
   categoryOption.setAttribute("value", "")
@@ -182,13 +192,53 @@ function categoriesFilters(category) {
     selectCategoryElement.appendChild(categoryOption)
   }
 
-  return selectCategoryElement
+  return selectCategoryContainer
 }
 
 function handleCategorySelect() {
   const categoryId = document.getElementById("category").value
   if (categoryId) {
     eventedPushState({ category_id: categoryId }, "", `?category=${categoryId}`)
+  } else {
+    eventedPushState({ page_id: 1 }, "", "./")
+  }
+}
+
+function priceFilters(price) {
+  const selectPriceContainer = document.createElement("div")
+  selectPriceContainer.classList.add("products-prices")
+
+  const selectPriceLabel = document.createElement("label")
+  selectPriceLabel.setAttribute("for", "price")
+  selectPriceLabel.innerText = "Price"
+  selectPriceContainer.appendChild(selectPriceLabel)
+
+  const selectPriceElement = document.createElement("select")
+  selectPriceElement.setAttribute("id", "price")
+  selectPriceElement.setAttribute("name", "price")
+  selectPriceElement.classList.add("filters")
+  selectPriceElement.onchange = handlePriceSelect
+  selectPriceElement.innerHTML = `
+    <option value="" ${price === "" && "selected"}>All</option>
+    <option value="0-100" ${price === "0-100" && "selected"}>0-100</option>
+    <option value="101-500" ${
+      price === "101-500" && "selected"
+    }>101-500</option>
+    <option value="501-1000" ${
+      price === "501-1000" && "selected"
+    }>501-1000</option>
+    <option value="1001-" ${price === "1001-" && "selected"}>&gt;1000</option>
+  `
+  selectPriceContainer.appendChild(selectPriceElement)
+  return selectPriceContainer
+}
+
+function handlePriceSelect() {
+  const url = document.location.search.toLowerCase()
+  const price = document.getElementById("price").value
+  console.log(url, price)
+  if (price) {
+    eventedPushState({ price: price }, "", `?price=${price}`)
   } else {
     eventedPushState({ page_id: 1 }, "", "./")
   }
@@ -308,10 +358,11 @@ function handleNextClick(pagesNum, category) {
  *
  * @param {number} page
  */
-function renderProductsPage(category = null, page = 1) {
+function renderProductsPage(category = null, page = 1, price = null) {
   let productsToShow
   let productsNum
 
+  // TODO add price filter
   if (category) {
     productsToShow = products.filter(
       (product) => product.categoryId === category
@@ -369,11 +420,10 @@ function renderContent(url) {
   const page = params.get("page")
   const product = params.get("product")
   const category = params.get("category")
+  const price = params.get("price")
 
-  if (page === null && product === null && category === null) {
-    renderProductsPage(null, 1)
-  } else if (category || page) {
-    renderProductsPage(Number(category), Number(page) || 1)
+  if (category || page || price) {
+    renderProductsPage(Number(category), Number(page) || 1, price)
   } else if (product) {
     const productId = Number(product)
     renderProductDetails(productId)
@@ -400,7 +450,7 @@ document.addEventListener(
 
 window.addEventListener(
   "popstate",
-  function (event) {
+  function () {
     const url = document.location.search.toLowerCase()
     renderContent(url)
   },

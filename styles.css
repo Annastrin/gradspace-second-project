@@ -35,15 +35,27 @@ img {
 }
 
 .products-filters {
+  display: flex;
+  flex-wrap: wrap;
   padding: 0 10px 15px;
 }
 
-.products-categories {
+.products-filters label {
+  display: block;
+  padding-bottom: 5px;
+  color: #c48f45;
+}
+
+.filters {
   border: 1px solid #c48f45;
   border-radius: 5px;
   padding: 10px;
   background-color: transparent;
   color: #c48f45;
+}
+
+.products-categories {
+  margin-right: 15px;
 }
 
 .product-container .nav-buttons {
