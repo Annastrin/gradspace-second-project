@@ -3,7 +3,6 @@ const imagesUrl = "https://storage.googleapis.com/luxe_media/wwwroot/"
 
 function renderProducts(products) {
   const content = document.getElementById("main-content")
-  console.log("Rendering products...")
 
   const productsContainer = document.createElement("div")
   productsContainer.classList.add("product-container")
@@ -206,7 +205,6 @@ function categoriesFilters(category, price) {
 
 function handleCategorySelect(price) {
   const category = document.getElementById("category").value
-  console.trace({ category, price })
   if ((category && price === null) || (category && price === "")) {
     eventedPushState({ category_id: category }, "", `?category=${category}`)
   } else if ((category === null || category === "") && price) {
