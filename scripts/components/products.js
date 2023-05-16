@@ -41,5 +41,5 @@ export default function productsCatalog(products) {
 }
 
 function handleProductCardClick(productId) {
-  eventedPushState({ product_id: productId }, "", `?product=${productId}`)
+  eventedPushState(`?product=${productId}`)
 }

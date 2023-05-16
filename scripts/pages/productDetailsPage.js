@@ -121,7 +121,7 @@ function addNavButtons() {
 }
 
 function handleGoHome() {
-  eventedPushState({ page_id: 1 }, "", "./")
+  eventedPushState("./")
 }
 
 function handleGoBack() {

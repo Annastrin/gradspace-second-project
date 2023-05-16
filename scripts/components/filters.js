@@ -1,4 +1,4 @@
-import { products, eventedPushState } from "../helpers.js"
+import { products, eventedPushState, navigate } from "../helpers.js"
 
 export default function filters(category = null, price = null) {
   const filtersElement = document.createElement("div")
@@ -50,19 +50,7 @@ function categoriesFilters(category, price) {
 
 function handleCategorySelect(price) {
   const category = document.getElementById("category").value
-  if ((category && price === null) || (category && price === "")) {
-    eventedPushState({ category_id: category }, "", `?category=${category}`)
-  } else if ((category === null || category === "") && price) {
-    eventedPushState({ price: price }, "", `?price=${price}`)
-  } else if (category && price) {
-    eventedPushState(
-      { price: price, category_id: category },
-      "",
-      `?category=${category}&price=${price}`
-    )
-  } else {
-    eventedPushState({ page_id: 1 }, "", "./")
-  }
+  eventedPushState(navigate({ category, price }))
 }
 
 function priceFilters(price, category) {
@@ -100,17 +88,5 @@ function priceFilters(price, category) {
 
 function handlePriceSelect(category) {
   const price = document.getElementById("price").value
-  if (price && category === null) {
-    eventedPushState({ price: price }, "", `?price=${price}`)
-  } else if ((price === null && category) || (price === "" && category)) {
-    eventedPushState({ category_id: category }, "", `?category=${category}`)
-  } else if (price && category) {
-    eventedPushState(
-      { price: price, category_id: category },
-      "",
-      `?category=${category}&price=${price}`
-    )
-  } else {
-    eventedPushState({ page_id: 1 }, "", "./")
-  }
+  eventedPushState(navigate({ price, category }))
 }

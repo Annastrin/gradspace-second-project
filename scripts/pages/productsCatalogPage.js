@@ -16,41 +16,16 @@ export default function productsCatalogPage(
   let productsNum
 
   if (category && price === null) {
-    productsToShow = products.filter(
-      (product) => product.categoryId === category
+    productsToShow = products.filter((product) =>
+      categoryFilter(product, category)
     )
   } else if (category === null && price) {
-    productsToShow = products.filter((product) => {
-      switch (price) {
-        case "min0max100":
-          return product.price <= 100
-        case "min101max500":
-          return product.price >= 101 && product.price <= 500
-        case "min501max1000":
-          return product.price >= 501 && product.price <= 1000
-        case "min1001":
-          return product.price >= 1001
-        default:
-          return product
-      }
-    })
+    productsToShow = products.filter((product) => priceFilter(product, price))
   } else if (category && price) {
-    productsToShow = products
-      .filter((product) => product.categoryId === category)
-      .filter((product) => {
-        switch (price) {
-          case "min0max100":
-            return product.price <= 100
-          case "min101max500":
-            return product.price >= 101 && product.price <= 500
-          case "min501max1000":
-            return product.price >= 501 && product.price <= 1000
-          case "min1001":
-            return product.price >= 1001
-          default:
-            return product
-        }
-      })
+    productsToShow = products.filter(
+      (product) =>
+        categoryFilter(product, category) && priceFilter(product, price)
+    )
   } else {
     productsToShow = products
   }
@@ -72,4 +47,23 @@ export default function productsCatalogPage(
   }
   content.appendChild(filters(category, price))
   content.appendChild(productsCatalog(productsToShow, productsOnPage))
+}
+
+function categoryFilter(product, category) {
+  return product.categoryId === category
+}
+
+function priceFilter(product, price) {
+  switch (price) {
+    case "min0max100":
+      return product.price <= 100
+    case "min101max500":
+      return product.price >= 101 && product.price <= 500
+    case "min501max1000":
+      return product.price >= 501 && product.price <= 1000
+    case "min1001":
+      return product.price >= 1001
+    default:
+      return product
+  }
 }

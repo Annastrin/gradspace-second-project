@@ -1,4 +1,4 @@
-import { eventedPushState } from "../helpers.js"
+import { eventedPushState, navigate } from "../helpers.js"
 
 /**
  *
@@ -71,53 +71,14 @@ function handlePageClick(el, pageNum, category, price) {
   const activePageLink = document.querySelector(".page-link.active")
   activePageLink && activePageLink.classList.remove("active")
   el.classList.add("active")
-  if (category && price == null) {
-    eventedPushState(
-      { category_id: category, page_id: pageNum },
-      "",
-      `?category=${category}&page=${pageNum}`
-    )
-  } else if (category === null && price) {
-    eventedPushState(
-      { price, page_id: pageNum },
-      "",
-      `?price=${price}&page=${pageNum}`
-    )
-  } else if (category && price) {
-    eventedPushState(
-      { category_id: category, price, page_id: pageNum },
-      "",
-      `?category=${category}&price=${price}&page=${pageNum}`
-    )
-  } else {
-    eventedPushState({ page_id: pageNum }, "", `?page=${pageNum}`)
-  }
+
+  eventedPushState(navigate({ page: pageNum, category, price }))
 }
 
 function handlePrevClick(category, price) {
   const page = Number(new URLSearchParams(document.location.search).get("page"))
   if (page > 1) {
-    if (category && price === null) {
-      eventedPushState(
-        { category_id: category, page_id: page - 1 },
-        "",
-        `?category=${category}&page=${page - 1}`
-      )
-    } else if (category === null && price) {
-      eventedPushState(
-        { price: price, page_id: page - 1 },
-        "",
-        `?price=${price}&page=${page - 1}`
-      )
-    } else if (category && price) {
-      eventedPushState(
-        { category_id: category, price: price, page_id: page - 1 },
-        "",
-        `?category=${category}&price=${price}&page=${page - 1}`
-      )
-    } else {
-      eventedPushState({ page_id: page - 1 }, "", `?page=${page - 1}`)
-    }
+    eventedPushState(navigate({ page: page - 1, category, price }))
   }
 }
 
@@ -125,26 +86,6 @@ function handleNextClick(pagesNum, category, price) {
   const page =
     Number(new URLSearchParams(document.location.search).get("page")) || 1
   if (page < pagesNum) {
-    if (category && price === null) {
-      eventedPushState(
-        { category_id: category, page_id: page + 1 },
-        "",
-        `?category=${category}&page=${page + 1}`
-      )
-    } else if (category === null && price) {
-      eventedPushState(
-        { price: price, page_id: page + 1 },
-        "",
-        `?price=${price}&page=${page + 1}`
-      )
-    } else if (category && price) {
-      eventedPushState(
-        { category_id: category, price: price, page_id: page + 1 },
-        "",
-        `?category=${category}&price=${price}&page=${page + 1}`
-      )
-    } else {
-      eventedPushState({ page_id: page + 1 }, "", `?page=${page + 1}`)
-    }
+    eventedPushState(navigate({ page: page + 1, category, price }))
   }
 }

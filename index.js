@@ -1,21 +1,6 @@
 import productDetailsPage from "./scripts/pages/productDetailsPage.js"
 import productsCatalogPage from "./scripts/pages/productsCatalogPage.js"
 
-function renderPageNotFound() {
-  const content = document.getElementById("main-content")
-  content.innerHTML = `
-    <div class="container text-center">
-      <div class="mb-4">
-        <div class="nav-buttons">
-          <button class="nav-btn" onclick="handleGoHome()">Home</button>
-          <button class="nav-btn" onclick="handleGoBack()">Back</button>
-        </div>
-      </div>
-      <p>Page Not Found :(</p>
-    </div>
-  `
-}
-
 function renderContent(url) {
   const params = new URLSearchParams(url)
   const page = params.get("page")
@@ -64,3 +49,18 @@ window.addEventListener(
   },
   false
 )
+
+function renderPageNotFound() {
+  const content = document.getElementById("main-content")
+  content.innerHTML = `
+    <div class="container text-center">
+      <div class="mb-4">
+        <div class="nav-buttons">
+          <button class="nav-btn" onclick="handleGoHome()">Home</button>
+          <button class="nav-btn" onclick="handleGoBack()">Back</button>
+        </div>
+      </div>
+      <p>Page Not Found :(</p>
+    </div>
+  `
+}
