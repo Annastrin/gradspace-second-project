@@ -1,14 +1,12 @@
-import { products, eventedPushState } from "./helpers.js"
+import { products, eventedPushState } from "../helpers.js"
 
-export default function renderFilters(category = null, price = null) {
-  const content = document.getElementById("main-content")
+export default function filters(category = null, price = null) {
+  const filtersElement = document.createElement("div")
+  filtersElement.classList.add("products-filters")
+  filtersElement.appendChild(categoriesFilters(category, price))
+  filtersElement.appendChild(priceFilters(price, category))
 
-  const filters = document.createElement("div")
-  filters.classList.add("products-filters")
-  filters.appendChild(categoriesFilters(category, price))
-  filters.appendChild(priceFilters(price, category))
-
-  content.appendChild(filters)
+  return filtersElement
 }
 
 function categoriesFilters(category, price) {

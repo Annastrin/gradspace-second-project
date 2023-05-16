@@ -1,73 +1,5 @@
-import renderNavigation from "./scripts/navigation.js"
-import renderFilters from "./scripts/filters.js"
-import renderProducts from "./scripts/products.js"
-import renderProductDetails from "./scripts/product-details.js"
-import { products } from "./scripts/helpers.js"
-
-/**
- *
- * @param {number} page
- */
-function renderProductsPage(category = null, page = 1, price = null) {
-  let productsToShow
-  let productsNum
-
-  if (category && price === null) {
-    productsToShow = products.filter(
-      (product) => product.categoryId === category
-    )
-  } else if (category === null && price) {
-    productsToShow = products.filter((product) => {
-      switch (price) {
-        case "min0max100":
-          return product.price <= 100
-        case "min101max500":
-          return product.price >= 101 && product.price <= 500
-        case "min501max1000":
-          return product.price >= 501 && product.price <= 1000
-        case "min1001":
-          return product.price >= 1001
-        default:
-          return product
-      }
-    })
-  } else if (category && price) {
-    productsToShow = products
-      .filter((product) => product.categoryId === category)
-      .filter((product) => {
-        switch (price) {
-          case "min0max100":
-            return product.price <= 100
-          case "min101max500":
-            return product.price >= 101 && product.price <= 500
-          case "min501max1000":
-            return product.price >= 501 && product.price <= 1000
-          case "min1001":
-            return product.price >= 1001
-          default:
-            return product
-        }
-      })
-  } else {
-    productsToShow = products
-  }
-  productsNum = productsToShow.length
-
-  const productsOnPage = 20
-  const pagesNum = Math.ceil(productsNum / productsOnPage)
-
-  productsToShow = productsToShow.slice(
-    productsOnPage * (page - 1),
-    productsOnPage * page
-  )
-
-  const content = document.getElementById("main-content")
-  content.innerHTML = ""
-
-  renderNavigation(pagesNum, page, category, price)
-  renderFilters(category, price)
-  renderProducts(productsToShow, productsOnPage)
-}
+import productDetailsPage from "./scripts/pages/productDetailsPage.js"
+import productsCatalogPage from "./scripts/pages/productsCatalogPage.js"
 
 function renderPageNotFound() {
   const content = document.getElementById("main-content")
@@ -97,12 +29,12 @@ function renderContent(url) {
     category === null &&
     price === null
   ) {
-    renderProductsPage(null, 1, null)
+    productsCatalogPage(null, 1, null)
   } else if (category || page || price) {
-    renderProductsPage(Number(category) || null, Number(page) || 1, price)
+    productsCatalogPage(Number(category) || null, Number(page) || 1, price)
   } else if (product) {
     const productId = Number(product)
-    renderProductDetails(productId)
+    productDetailsPage(productId)
   } else {
     renderPageNotFound()
     console.log("Something went wrong!")

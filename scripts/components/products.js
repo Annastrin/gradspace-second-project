@@ -1,11 +1,8 @@
-import { imagesUrl, eventedPushState } from "./helpers.js"
+import { imagesUrl, eventedPushState } from "../helpers.js"
 
-export default function renderProducts(products) {
-  const content = document.getElementById("main-content")
-
+export default function productsCatalog(products) {
   const productsContainer = document.createElement("div")
   productsContainer.classList.add("product-container", "row")
-  content.appendChild(productsContainer)
 
   if (products.length > 0) {
     productsContainer.classList.add(
@@ -39,6 +36,8 @@ export default function renderProducts(products) {
     noProducts.innerHTML = `<p class="no-products-found">Nothing found :(</p>`
     productsContainer.appendChild(noProducts)
   }
+
+  return productsContainer
 }
 
 function handleProductCardClick(productId) {

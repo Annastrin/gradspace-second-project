@@ -1,10 +1,10 @@
-import { products, imagesUrl, eventedPushState } from "./helpers.js"
+import { products, imagesUrl, eventedPushState } from "../helpers.js"
 
-export default function renderProductDetails(productId) {
+export default function productDetailsPage(productId) {
   const product = products.find((prod) => prod.prodId === productId)
-  const productContainer = document.getElementById("main-content")
-  productContainer.innerHTML = ""
-  productContainer.className = "product-container row"
+  const content = document.getElementById("main-content")
+  content.innerHTML = ""
+  content.className = "product-container row"
 
   const productHasMultipleImages = product.productMedia.length > 1
   let productImage
@@ -20,12 +20,12 @@ export default function renderProductDetails(productId) {
   const navButtonsContainer = document.createElement("div")
   navButtonsContainer.classList.add("col-12", "mb-4")
   navButtonsContainer.appendChild(addNavButtons())
-  productContainer.appendChild(navButtonsContainer)
+  content.appendChild(navButtonsContainer)
 
   const productImageContainer = document.createElement("div")
   productImageContainer.classList.add("col-12", "col-md-7", "mb-4", "mb-md-0")
   productImageContainer.innerHTML = productImage
-  productContainer.appendChild(productImageContainer)
+  content.appendChild(productImageContainer)
 
   const productDescriptionContainer = document.createElement("div")
   productDescriptionContainer.classList.add("col-12", "col-md-5")
@@ -36,7 +36,7 @@ export default function renderProductDetails(productId) {
       <p>${product.description}</p>
     </div>
   `
-  productContainer.appendChild(productDescriptionContainer)
+  content.appendChild(productDescriptionContainer)
 
   if (productHasMultipleImages) {
     const carousel = new bootstrap.Carousel("#carousel")
@@ -121,11 +121,9 @@ function addNavButtons() {
 }
 
 function handleGoHome() {
-  console.trace("Go Home")
   eventedPushState({ page_id: 1 }, "", "./")
 }
 
 function handleGoBack() {
-  console.trace("Go Back")
   history.back()
 }
