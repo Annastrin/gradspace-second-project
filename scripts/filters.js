@@ -1,6 +1,4 @@
-import eventedPushState from "./helpers.js"
-
-const products = rawdata.filter((product) => product.productMedia.length > 0)
+import { products, eventedPushState } from "./helpers.js"
 
 export default function renderFilters(category = null, price = null) {
   const content = document.getElementById("main-content")

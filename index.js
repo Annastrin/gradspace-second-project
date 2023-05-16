@@ -2,8 +2,7 @@ import renderNavigation from "./scripts/navigation.js"
 import renderFilters from "./scripts/filters.js"
 import renderProducts from "./scripts/products.js"
 import renderProductDetails from "./scripts/product-details.js"
-
-const products = rawdata.filter((product) => product.productMedia.length > 0)
+import { products } from "./scripts/helpers.js"
 
 /**
  *

@@ -1,4 +1,4 @@
-import eventedPushState from "./helpers.js"
+import { eventedPushState } from "./helpers.js"
 
 /**
  *
@@ -133,12 +133,12 @@ function handleNextClick(pagesNum, category, price) {
   const page =
     Number(new URLSearchParams(document.location.search).get("page")) || 1
   if (page < pagesNum) {
-    eventedPushState(
-      { category_id: category, page_id: page + 1 },
-      "",
-      `?category=${category}&page=${page + 1}`
-    )
     if (category && price === null) {
+      eventedPushState(
+        { category_id: category, page_id: page + 1 },
+        "",
+        `?category=${category}&page=${page + 1}`
+      )
     } else if (category === null && price) {
       eventedPushState(
         { price: price, page_id: page + 1 },

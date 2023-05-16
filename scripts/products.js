@@ -1,5 +1,4 @@
-import eventedPushState from "./helpers.js"
-const imagesUrl = "https://storage.googleapis.com/luxe_media/wwwroot/"
+import { imagesUrl, eventedPushState } from "./helpers.js"
 
 export default function renderProducts(products) {
   const content = document.getElementById("main-content")

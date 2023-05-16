@@ -1,7 +1,4 @@
-import eventedPushState from "./helpers.js"
-
-const imagesUrl = "https://storage.googleapis.com/luxe_media/wwwroot/"
-const products = rawdata.filter((product) => product.productMedia.length > 0)
+import { products, imagesUrl, eventedPushState } from "./helpers.js"
 
 export default function renderProductDetails(productId) {
   const product = products.find((prod) => prod.prodId === productId)
