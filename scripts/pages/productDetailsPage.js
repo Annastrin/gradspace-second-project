@@ -1,4 +1,4 @@
-import { products, imagesUrl, eventedPushState } from "../helpers.js"
+import { products, imagesUrl, eventedPushState, navigate } from "../helpers.js"
 
 export default function productDetailsPage(productId) {
   const product = products.find((prod) => prod.prodId === productId)
@@ -12,9 +12,8 @@ export default function productDetailsPage(productId) {
   if (productHasMultipleImages) {
     productImage = addImageCarousel(product.productMedia)
   } else {
-    productImage = `
-      <img src="${imagesUrl + product.productMedia[0].url}" />
-    `
+    productImage = document.createElement("img")
+    productImage.setAttribute("src", imagesUrl + product.productMedia[0].url)
   }
 
   const navButtonsContainer = document.createElement("div")
@@ -22,16 +21,28 @@ export default function productDetailsPage(productId) {
   navButtonsContainer.appendChild(addNavButtons())
   content.appendChild(navButtonsContainer)
 
+  const productPath = document.createElement("div")
+  productPath.classList.add("col-12", "mb-4", "product-path")
+  content.appendChild(productPath)
+  const productCategoryElement = document.createElement("a")
+  productCategoryElement.innerHTML = `<h2>${product.category.categoryName}</h2>`
+  productCategoryElement.onclick = () =>
+    handleCategoryClick(product.category.categoryId)
+  const productPathTitle = document.createElement("h2")
+  productPathTitle.innerHTML = `<span class="slash">&sol;</span><span>${product.title}</span>`
+  productPath.appendChild(productCategoryElement)
+  productPath.appendChild(productPathTitle)
+
   const productImageContainer = document.createElement("div")
   productImageContainer.classList.add("col-12", "col-md-7", "mb-4", "mb-md-0")
-  productImageContainer.innerHTML = productImage
+  productImageContainer.appendChild(productImage)
   content.appendChild(productImageContainer)
 
   const productDescriptionContainer = document.createElement("div")
   productDescriptionContainer.classList.add("col-12", "col-md-5")
   productDescriptionContainer.innerHTML = `
     <div class="ms-md-5">
-      <h2>${product.title}</h2>
+      <h1>${product.title}</h1>
       <p>$ ${product.price}</p>
       <p>${product.description}</p>
     </div>
@@ -96,9 +107,7 @@ function addImageCarousel(images) {
     carouselInner.appendChild(carouselItem)
   })
 
-  const carouselWrapper = document.createElement("div")
-  carouselWrapper.appendChild(carouselElement)
-  return carouselWrapper.innerHTML
+  return carouselElement
 }
 
 function addNavButtons() {
@@ -126,4 +135,8 @@ function handleGoHome() {
 
 function handleGoBack() {
   history.back()
+}
+
+function handleCategoryClick(category) {
+  eventedPushState(navigate({ category }))
 }

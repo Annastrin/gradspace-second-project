@@ -40,6 +40,7 @@ export default function productsCatalogPage(
   )
 
   const content = document.getElementById("main-content")
+  content.className = ""
   content.innerHTML = ""
 
   if (pagesNum > 0) {

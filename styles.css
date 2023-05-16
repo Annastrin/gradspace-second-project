@@ -87,7 +87,7 @@ img {
   color: #fff;
 }
 
-.disabled > .page-link {
+.disabled>.page-link {
   color: #c48f45;
 }
 
@@ -138,6 +138,25 @@ img {
   color: var(--bs-secondary-color);
 }
 
+.product-path a {
+  margin-bottom: 0;
+  color: #c48f45;
+}
+
+.product-path h2 {
+  display: inline-block;
+  margin-bottom: 0;
+  color: #c48f45;
+}
+
+.product-path span {
+  display: inline-block;
+}
+
+.product-path .slash {
+  margin: 0 5px;
+}
+
 .no-products-found {
   padding: 0 10px;
 }
@@ -168,11 +187,13 @@ img {
 }
 
 @media screen and (min-width: 768px) {
+
   .carousel-control-next-icon,
   .carousel-control-prev-icon {
     width: 3rem;
     height: 3rem;
   }
+
   .carousel-item img {
     height: 560px;
     object-fit: cover;
