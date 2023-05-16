@@ -139,6 +139,10 @@ img {
   color: var(--bs-secondary-color);
 }
 
+.no-products-found {
+  padding: 0 10px;
+}
+
 .carousel-control-next,
 .carousel-control-prev {
   z-index: 2;
