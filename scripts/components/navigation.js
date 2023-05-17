@@ -13,7 +13,7 @@ export default function navigation(
   sortPrice
 ) {
   price = price ? String(price) : price
-  sortPrice = sortPrice ? String(sortPrice) : price
+  sortPrice = sortPrice ? String(sortPrice) : sortPrice
 
   const nav = document.createElement("nav")
   nav.setAttribute("aria-label", "Page navigation")

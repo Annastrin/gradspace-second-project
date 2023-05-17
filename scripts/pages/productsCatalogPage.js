@@ -30,17 +30,11 @@ export default function productsCatalogPage(
   }
 
   let productsToShow
-  if (sortPrice) {
-    if (sortPrice === "low-to-high") {
-      productsToShow = filteredProducts
-        .slice()
-        .sort((a, b) => a.price - b.price)
-    }
-    if (sortPrice === "high-to-low") {
-      productsToShow = filteredProducts
-        .slice()
-        .sort((a, b) => b.price - a.price)
-    }
+
+  if (sortPrice === "low-to-high") {
+    productsToShow = filteredProducts.slice().sort((a, b) => a.price - b.price)
+  } else if (sortPrice === "high-to-low") {
+    productsToShow = filteredProducts.slice().sort((a, b) => b.price - a.price)
   } else {
     productsToShow = filteredProducts
   }
