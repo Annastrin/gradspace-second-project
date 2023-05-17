@@ -61,7 +61,7 @@ export default function productsCatalogPage(
   if (pagesNum > 0) {
     content.appendChild(navigation(pagesNum, page, category, price, sortPrice))
   }
-  content.appendChild(filters(category, price, sortPrice))
+  content.appendChild(filters(category, price, sortPrice, page))
   content.appendChild(productsCatalog(productsToShow, productsOnPage))
 }
 

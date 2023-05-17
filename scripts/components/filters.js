@@ -3,13 +3,14 @@ import { products, eventedPushState, navigate } from "../helpers.js"
 export default function filters(
   category = null,
   price = null,
-  sortPrice = null
+  sortPrice = null,
+  page = null
 ) {
   const filtersElement = document.createElement("div")
   filtersElement.classList.add("products-filters")
   filtersElement.appendChild(categoriesFilter(category, price, sortPrice))
   filtersElement.appendChild(priceFilter(price, category, sortPrice))
-  filtersElement.appendChild(priceSorter(category, price, sortPrice))
+  filtersElement.appendChild(priceSorter(category, price, sortPrice, page))
   filtersElement.appendChild(resetFilters())
 
   return filtersElement
@@ -103,7 +104,7 @@ function handlePriceSelect(category, sortPrice) {
   eventedPushState(navigate({ price, category, sortPrice }))
 }
 
-function priceSorter(category, price, sortPrice) {
+function priceSorter(category, price, sortPrice, page) {
   const sortContainer = document.createElement("div")
   sortContainer.classList.add("sort-price")
 
@@ -115,7 +116,7 @@ function priceSorter(category, price, sortPrice) {
   const sortPriceElement = document.createElement("select")
   sortPriceElement.setAttribute("id", "sort-price")
   sortPriceElement.setAttribute("name", "sort-price")
-  sortPriceElement.onchange = () => handleSortPrice(category, price)
+  sortPriceElement.onchange = () => handleSortPrice(category, price, page)
   sortPriceElement.classList.add("filters")
   if (sortPrice) {
     sortPriceElement.classList.add("selected")
@@ -134,9 +135,9 @@ function priceSorter(category, price, sortPrice) {
   return sortContainer
 }
 
-function handleSortPrice(category, price) {
+function handleSortPrice(category, price, page) {
   const sortPrice = document.getElementById("sort-price").value
-  eventedPushState(navigate({ category, price, sortPrice }))
+  eventedPushState(navigate({ category, price, sortPrice, page }))
 }
 
 function resetFilters() {
