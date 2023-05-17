@@ -9,7 +9,6 @@ function renderContent(url) {
   const category = params.get("category")
   const price = params.get("price")
   const sortPrice = params.get("sort-price")
-  console.trace({ url, sortPrice, price })
 
   if (
     page === null &&

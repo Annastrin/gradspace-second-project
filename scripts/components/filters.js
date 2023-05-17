@@ -10,6 +10,7 @@ export default function filters(
   filtersElement.appendChild(categoriesFilter(category, price, sortPrice))
   filtersElement.appendChild(priceFilter(price, category, sortPrice))
   filtersElement.appendChild(priceSorter(category, price, sortPrice))
+  filtersElement.appendChild(resetFilters())
 
   return filtersElement
 }
@@ -28,6 +29,9 @@ function categoriesFilter(category, price, sortPrice) {
   selectCategoryElement.setAttribute("id", "category")
   selectCategoryElement.setAttribute("name", "category")
   selectCategoryElement.classList.add("filters")
+  if (category) {
+    selectCategoryElement.classList.add("selected")
+  }
   selectCategoryElement.onchange = () => handleCategorySelect(price, sortPrice)
   selectCategoryContainer.appendChild(selectCategoryElement)
 
@@ -71,6 +75,9 @@ function priceFilter(price, category, sortPrice) {
   selectPriceElement.setAttribute("id", "price")
   selectPriceElement.setAttribute("name", "price")
   selectPriceElement.classList.add("filters")
+  if (price) {
+    selectPriceElement.classList.add("selected")
+  }
   selectPriceElement.onchange = () => handlePriceSelect(category, sortPrice)
   selectPriceElement.innerHTML = `
     <option value="" ${price === "" && "selected"}>All</option>
@@ -97,7 +104,6 @@ function handlePriceSelect(category, sortPrice) {
 }
 
 function priceSorter(category, price, sortPrice) {
-  console.trace(sortPrice)
   const sortContainer = document.createElement("div")
   sortContainer.classList.add("sort-price")
 
@@ -111,6 +117,9 @@ function priceSorter(category, price, sortPrice) {
   sortPriceElement.setAttribute("name", "sort-price")
   sortPriceElement.onchange = () => handleSortPrice(category, price)
   sortPriceElement.classList.add("filters")
+  if (sortPrice) {
+    sortPriceElement.classList.add("selected")
+  }
   sortPriceElement.innerHTML = `
     <option value="" ${sortPrice === "" && "selected"}>Default</option>
     <option value="low-to-high" ${
@@ -127,6 +136,18 @@ function priceSorter(category, price, sortPrice) {
 
 function handleSortPrice(category, price) {
   const sortPrice = document.getElementById("sort-price").value
-  console.log(sortPrice)
   eventedPushState(navigate({ category, price, sortPrice }))
+}
+
+function resetFilters() {
+  const resetFiltersContainer = document.createElement("div")
+  resetFiltersContainer.classList.add("reset-filters")
+
+  const resetBtn = document.createElement("button")
+  resetFiltersContainer.appendChild(resetBtn)
+  resetBtn.classList.add("reset-filters-btn")
+  resetBtn.innerText = "Reset Filters"
+  resetBtn.onclick = () => eventedPushState("./")
+
+  return resetFiltersContainer
 }
