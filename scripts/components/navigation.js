@@ -5,8 +5,15 @@ import { eventedPushState, navigate } from "../helpers.js"
  * @param {number} pagesNum
  * @param {number} currentPage
  */
-export default function navigation(pagesNum, currentPage, category, price) {
+export default function navigation(
+  pagesNum,
+  currentPage,
+  category,
+  price,
+  sortPrice
+) {
   price = price ? String(price) : price
+  sortPrice = sortPrice ? String(sortPrice) : price
 
   const nav = document.createElement("nav")
   nav.setAttribute("aria-label", "Page navigation")
@@ -25,7 +32,8 @@ export default function navigation(pagesNum, currentPage, category, price) {
   const prevPageLinkElement = document.createElement("a")
   prevPageLinkElement.classList.add("page-link")
   prevPageLinkElement.setAttribute("aria-label", "Previous")
-  prevPageLinkElement.onclick = () => handlePrevClick(category, price)
+  prevPageLinkElement.onclick = () =>
+    handlePrevClick(category, price, sortPrice)
   prevPageLinkElement.innerHTML = `<span aria-hidden="true">&laquo;</span>`
   prevPageLinkItem.appendChild(prevPageLinkElement)
 
@@ -39,7 +47,8 @@ export default function navigation(pagesNum, currentPage, category, price) {
   const nextPageLinkElement = document.createElement("a")
   nextPageLinkElement.classList.add("page-link")
   nextPageLinkElement.setAttribute("aria-label", "Next")
-  nextPageLinkElement.onclick = () => handleNextClick(pagesNum, category, price)
+  nextPageLinkElement.onclick = () =>
+    handleNextClick(pagesNum, category, price, sortPrice)
   nextPageLinkElement.innerHTML = `<span aria-hidden="true">&raquo;</span>`
   nextPageLinkItem.appendChild(nextPageLinkElement)
 
@@ -52,7 +61,7 @@ export default function navigation(pagesNum, currentPage, category, price) {
     pageLinkElement.innerText = i + 1
     pageLinkElement.classList.add("page-link")
     pageLinkElement.onclick = (e) =>
-      handlePageClick(e.target, i + 1, category, price)
+      handlePageClick(e.target, i + 1, category, price, sortPrice)
 
     if ((currentPage === null && i === 0) || currentPage === i + 1) {
       pageLinkElement.classList.add("active")
@@ -67,25 +76,25 @@ export default function navigation(pagesNum, currentPage, category, price) {
   return nav
 }
 
-function handlePageClick(el, pageNum, category, price) {
+function handlePageClick(el, pageNum, category, price, sortPrice) {
   const activePageLink = document.querySelector(".page-link.active")
   activePageLink && activePageLink.classList.remove("active")
   el.classList.add("active")
 
-  eventedPushState(navigate({ page: pageNum, category, price }))
+  eventedPushState(navigate({ page: pageNum, category, price, sortPrice }))
 }
 
-function handlePrevClick(category, price) {
+function handlePrevClick(category, price, sortPrice) {
   const page = Number(new URLSearchParams(document.location.search).get("page"))
   if (page > 1) {
-    eventedPushState(navigate({ page: page - 1, category, price }))
+    eventedPushState(navigate({ page: page - 1, category, price, sortPrice }))
   }
 }
 
-function handleNextClick(pagesNum, category, price) {
+function handleNextClick(pagesNum, category, price, sortPrice) {
   const page =
     Number(new URLSearchParams(document.location.search).get("page")) || 1
   if (page < pagesNum) {
-    eventedPushState(navigate({ page: page + 1, category, price }))
+    eventedPushState(navigate({ page: page + 1, category, price, sortPrice }))
   }
 }

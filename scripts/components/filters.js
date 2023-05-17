@@ -1,15 +1,20 @@
 import { products, eventedPushState, navigate } from "../helpers.js"
 
-export default function filters(category = null, price = null) {
+export default function filters(
+  category = null,
+  price = null,
+  sortPrice = null
+) {
   const filtersElement = document.createElement("div")
   filtersElement.classList.add("products-filters")
-  filtersElement.appendChild(categoriesFilters(category, price))
-  filtersElement.appendChild(priceFilters(price, category))
+  filtersElement.appendChild(categoriesFilter(category, price, sortPrice))
+  filtersElement.appendChild(priceFilter(price, category, sortPrice))
+  filtersElement.appendChild(priceSorter(category, price, sortPrice))
 
   return filtersElement
 }
 
-function categoriesFilters(category, price) {
+function categoriesFilter(category, price, sortPrice) {
   const categoriesArr = products[0].prodType.productCategory
   const selectCategoryContainer = document.createElement("div")
   selectCategoryContainer.classList.add("products-categories")
@@ -23,7 +28,7 @@ function categoriesFilters(category, price) {
   selectCategoryElement.setAttribute("id", "category")
   selectCategoryElement.setAttribute("name", "category")
   selectCategoryElement.classList.add("filters")
-  selectCategoryElement.onchange = () => handleCategorySelect(price)
+  selectCategoryElement.onchange = () => handleCategorySelect(price, sortPrice)
   selectCategoryContainer.appendChild(selectCategoryElement)
 
   let categoryOption = document.createElement("option")
@@ -48,12 +53,12 @@ function categoriesFilters(category, price) {
   return selectCategoryContainer
 }
 
-function handleCategorySelect(price) {
+function handleCategorySelect(price, sortPrice) {
   const category = document.getElementById("category").value
-  eventedPushState(navigate({ category, price }))
+  eventedPushState(navigate({ category, price, sortPrice }))
 }
 
-function priceFilters(price, category) {
+function priceFilter(price, category, sortPrice) {
   const selectPriceContainer = document.createElement("div")
   selectPriceContainer.classList.add("products-prices")
 
@@ -66,7 +71,7 @@ function priceFilters(price, category) {
   selectPriceElement.setAttribute("id", "price")
   selectPriceElement.setAttribute("name", "price")
   selectPriceElement.classList.add("filters")
-  selectPriceElement.onchange = () => handlePriceSelect(category)
+  selectPriceElement.onchange = () => handlePriceSelect(category, sortPrice)
   selectPriceElement.innerHTML = `
     <option value="" ${price === "" && "selected"}>All</option>
     <option value="min0max100" ${
@@ -86,7 +91,42 @@ function priceFilters(price, category) {
   return selectPriceContainer
 }
 
-function handlePriceSelect(category) {
+function handlePriceSelect(category, sortPrice) {
   const price = document.getElementById("price").value
-  eventedPushState(navigate({ price, category }))
+  eventedPushState(navigate({ price, category, sortPrice }))
+}
+
+function priceSorter(category, price, sortPrice) {
+  console.trace(sortPrice)
+  const sortContainer = document.createElement("div")
+  sortContainer.classList.add("sort-price")
+
+  const sortPriceLabel = document.createElement("label")
+  sortPriceLabel.setAttribute("for", "sort-price")
+  sortPriceLabel.innerText = "Sort price"
+  sortContainer.appendChild(sortPriceLabel)
+
+  const sortPriceElement = document.createElement("select")
+  sortPriceElement.setAttribute("id", "sort-price")
+  sortPriceElement.setAttribute("name", "sort-price")
+  sortPriceElement.onchange = () => handleSortPrice(category, price)
+  sortPriceElement.classList.add("filters")
+  sortPriceElement.innerHTML = `
+    <option value="" ${sortPrice === "" && "selected"}>Default</option>
+    <option value="low-to-high" ${
+      sortPrice === "low-to-high" && "selected"
+    }>Low to High</option>
+    <option value="high-to-low" ${
+      sortPrice === "high-to-low" && "selected"
+    }>High to Low</option>
+  `
+  sortContainer.appendChild(sortPriceElement)
+
+  return sortContainer
+}
+
+function handleSortPrice(category, price) {
+  const sortPrice = document.getElementById("sort-price").value
+  console.log(sortPrice)
+  eventedPushState(navigate({ category, price, sortPrice }))
 }

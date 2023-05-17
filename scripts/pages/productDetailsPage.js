@@ -1,4 +1,5 @@
 import { products, imagesUrl, eventedPushState, navigate } from "../helpers.js"
+import navButtons from "../components/navButtons.js"
 
 export default function productDetailsPage(productId) {
   const product = products.find((prod) => prod.prodId === productId)
@@ -18,7 +19,7 @@ export default function productDetailsPage(productId) {
 
   const navButtonsContainer = document.createElement("div")
   navButtonsContainer.classList.add("col-12", "mb-4")
-  navButtonsContainer.appendChild(addNavButtons())
+  navButtonsContainer.appendChild(navButtons())
   content.appendChild(navButtonsContainer)
 
   const productPath = document.createElement("div")
@@ -108,33 +109,6 @@ function addImageCarousel(images) {
   })
 
   return carouselElement
-}
-
-function addNavButtons() {
-  const buttonsContainer = document.createElement("div")
-  buttonsContainer.classList.add("nav-buttons")
-
-  const homeBtn = document.createElement("button")
-  homeBtn.classList.add("nav-btn")
-  homeBtn.innerText = "Home"
-  homeBtn.onclick = handleGoHome
-  buttonsContainer.appendChild(homeBtn)
-
-  const backBtn = document.createElement("button")
-  backBtn.classList.add("nav-btn")
-  backBtn.innerText = "Back"
-  backBtn.onclick = handleGoBack
-  buttonsContainer.appendChild(backBtn)
-
-  return buttonsContainer
-}
-
-function handleGoHome() {
-  eventedPushState("./")
-}
-
-function handleGoBack() {
-  history.back()
 }
 
 function handleCategoryClick(category) {

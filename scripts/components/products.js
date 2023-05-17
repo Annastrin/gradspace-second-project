@@ -22,7 +22,7 @@ export default function productsCatalog(products) {
         <div class="product-image-container">
           <img src="${
             imagesUrl + product.productMedia[0].url
-          }" alt="" class="product-image"/>
+          }" alt="" class="product-image" loading="lazy"/>
         </div>
         <h2 class="product-title">${product.title}</h2>
         <p class="product-price">$ ${product.price}</p>

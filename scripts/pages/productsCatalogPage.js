@@ -10,27 +10,42 @@ import { products } from "../helpers.js"
 export default function productsCatalogPage(
   category = null,
   page = 1,
-  price = null
+  price = null,
+  sortPrice = null
 ) {
-  let productsToShow
-  let productsNum
-
+  let filteredProducts
   if (category && price === null) {
-    productsToShow = products.filter((product) =>
+    filteredProducts = products.filter((product) =>
       categoryFilter(product, category)
     )
   } else if (category === null && price) {
-    productsToShow = products.filter((product) => priceFilter(product, price))
+    filteredProducts = products.filter((product) => priceFilter(product, price))
   } else if (category && price) {
-    productsToShow = products.filter(
+    filteredProducts = products.filter(
       (product) =>
         categoryFilter(product, category) && priceFilter(product, price)
     )
   } else {
-    productsToShow = products
+    filteredProducts = products.slice()
   }
-  productsNum = productsToShow.length
 
+  let productsToShow
+  if (sortPrice) {
+    if (sortPrice === "low-to-high") {
+      productsToShow = filteredProducts
+        .slice()
+        .sort((a, b) => a.price - b.price)
+    }
+    if (sortPrice === "high-to-low") {
+      productsToShow = filteredProducts
+        .slice()
+        .sort((a, b) => b.price - a.price)
+    }
+  } else {
+    productsToShow = filteredProducts
+  }
+
+  const productsNum = productsToShow.length
   const productsOnPage = 20
   const pagesNum = Math.ceil(productsNum / productsOnPage)
 
@@ -44,9 +59,9 @@ export default function productsCatalogPage(
   content.innerHTML = ""
 
   if (pagesNum > 0) {
-    content.appendChild(navigation(pagesNum, page, category, price))
+    content.appendChild(navigation(pagesNum, page, category, price, sortPrice))
   }
-  content.appendChild(filters(category, price))
+  content.appendChild(filters(category, price, sortPrice))
   content.appendChild(productsCatalog(productsToShow, productsOnPage))
 }
 

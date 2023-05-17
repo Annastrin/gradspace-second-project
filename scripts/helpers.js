@@ -18,13 +18,16 @@ export function eventedPushState(url) {
   return history.pushState(state, title, url)
 }
 
-export function navigate({ page, category, price }) {
+export function navigate({ page, category, price, sortPrice }) {
   const newLocation = new URLSearchParams()
   if (category) {
     newLocation.append("category", category)
   }
   if (price) {
     newLocation.append("price", price)
+  }
+  if (sortPrice) {
+    newLocation.append("sort-price", sortPrice)
   }
   if (page) {
     newLocation.append("page", page)

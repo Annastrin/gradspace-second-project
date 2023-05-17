@@ -1,5 +1,6 @@
 import productDetailsPage from "./scripts/pages/productDetailsPage.js"
 import productsCatalogPage from "./scripts/pages/productsCatalogPage.js"
+import pageNotFound from "./scripts/pages/pageNotFound.js"
 
 function renderContent(url) {
   const params = new URLSearchParams(url)
@@ -7,22 +8,30 @@ function renderContent(url) {
   const product = params.get("product")
   const category = params.get("category")
   const price = params.get("price")
+  const sortPrice = params.get("sort-price")
+  console.trace({ url, sortPrice, price })
 
   if (
     page === null &&
     product === null &&
     category === null &&
-    price === null
+    price === null &&
+    sortPrice === null &&
+    (url === "" || url === "./")
   ) {
-    productsCatalogPage(null, 1, null)
-  } else if (category || page || price) {
-    productsCatalogPage(Number(category) || null, Number(page) || 1, price)
+    productsCatalogPage(null, 1, null, null)
+  } else if (category || page || price || sortPrice) {
+    productsCatalogPage(
+      Number(category) || null,
+      Number(page) || 1,
+      price,
+      sortPrice
+    )
   } else if (product) {
     const productId = Number(product)
     productDetailsPage(productId)
   } else {
-    renderPageNotFound()
-    console.log("Something went wrong!")
+    pageNotFound()
   }
 }
 
@@ -49,18 +58,3 @@ window.addEventListener(
   },
   false
 )
-
-function renderPageNotFound() {
-  const content = document.getElementById("main-content")
-  content.innerHTML = `
-    <div class="container text-center">
-      <div class="mb-4">
-        <div class="nav-buttons">
-          <button class="nav-btn" onclick="handleGoHome()">Home</button>
-          <button class="nav-btn" onclick="handleGoBack()">Back</button>
-        </div>
-      </div>
-      <p>Page Not Found :(</p>
-    </div>
-  `
-}

@@ -54,7 +54,8 @@ img {
   color: #c48f45;
 }
 
-.products-categories {
+.products-categories,
+.products-prices {
   margin-right: 15px;
 }
 
