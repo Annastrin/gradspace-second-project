@@ -2,6 +2,9 @@ import navButtons from "../components/navButtons.js"
 
 export default function pageNotFound() {
   const content = document.getElementById("main-content")
+  content.className = ""
+  content.innerHTML = ""
+
   const pageNotFoundContainer = document.createElement("div")
   content.appendChild(pageNotFoundContainer)
 

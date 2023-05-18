@@ -4,6 +4,7 @@ import { eventedPushState, navigate } from "../helpers.js"
  *
  * @param {number} pagesNum
  * @param {number} currentPage
+ * @param {number} category
  */
 export default function navigation(
   pagesNum,

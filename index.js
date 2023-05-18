@@ -2,6 +2,36 @@ import productDetailsPage from "./scripts/pages/productDetailsPage.js"
 import productsCatalogPage from "./scripts/pages/productsCatalogPage.js"
 import pageNotFound from "./scripts/pages/pageNotFound.js"
 
+initialRender()
+listenUrlChangeOnCustomEvent()
+listenHistoryChange()
+
+function initialRender() {
+  const url = document.location.search.toLowerCase()
+  renderContent(url)
+}
+
+function listenUrlChangeOnCustomEvent() {
+  document.addEventListener(
+    "onpushstate",
+    function (event) {
+      renderContent(event.detail.url)
+    },
+    false
+  )
+}
+
+function listenHistoryChange() {
+  window.addEventListener(
+    "popstate",
+    function (e) {
+      const url = document.location.search.toLowerCase()
+      renderContent(url)
+    },
+    false
+  )
+}
+
 function renderContent(url) {
   const params = new URLSearchParams(url)
   const page = params.get("page")
@@ -33,27 +63,3 @@ function renderContent(url) {
     pageNotFound()
   }
 }
-
-function initialRender() {
-  const url = document.location.search.toLowerCase()
-  renderContent(url)
-}
-
-initialRender()
-
-document.addEventListener(
-  "onpushstate",
-  function (event) {
-    renderContent(event.detail.url)
-  },
-  false
-)
-
-window.addEventListener(
-  "popstate",
-  function () {
-    const url = document.location.search.toLowerCase()
-    renderContent(url)
-  },
-  false
-)

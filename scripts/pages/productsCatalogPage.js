@@ -14,6 +14,7 @@ export default function productsCatalogPage(
   sortPrice = null
 ) {
   let filteredProducts
+
   if (category && price === null) {
     filteredProducts = products.filter((product) =>
       categoryFilter(product, category)
