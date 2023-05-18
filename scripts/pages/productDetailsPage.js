@@ -22,17 +22,19 @@ export default function productDetailsPage(productId) {
   navButtonsContainer.appendChild(navButtons())
   content.appendChild(navButtonsContainer)
 
-  const productPath = document.createElement("div")
-  productPath.classList.add("col-12", "mb-4", "product-path")
-  content.appendChild(productPath)
-  const productCategoryElement = document.createElement("a")
-  productCategoryElement.innerHTML = `<h2>${product.category.categoryName}</h2>`
-  productCategoryElement.onclick = () =>
-    handleCategoryClick(product.category.categoryId)
-  const productPathTitle = document.createElement("h2")
-  productPathTitle.innerHTML = `<span class="slash">&sol;</span><span>${product.title}</span>`
-  productPath.appendChild(productCategoryElement)
-  productPath.appendChild(productPathTitle)
+  if (product.categoryId) {
+    const productPath = document.createElement("div")
+    productPath.classList.add("col-12", "mb-4", "product-path")
+    content.appendChild(productPath)
+    const productCategoryElement = document.createElement("a")
+    productCategoryElement.innerHTML = `<h2>${product.category.categoryName}</h2>`
+    productCategoryElement.onclick = () =>
+      handleCategoryClick(product.category.categoryId)
+    const productPathTitle = document.createElement("h2")
+    productPathTitle.innerHTML = `<span class="slash">&sol;</span><span>${product.title}</span>`
+    productPath.appendChild(productCategoryElement)
+    productPath.appendChild(productPathTitle)
+  }
 
   const productImageContainer = document.createElement("div")
   productImageContainer.classList.add("col-12", "col-md-7", "mb-4", "mb-md-0")
