@@ -15,6 +15,7 @@ export default function productDetailsPage(productId) {
   } else {
     productImage = document.createElement("img")
     productImage.setAttribute("src", imagesUrl + product.productMedia[0].url)
+    productImage.classList.add("product-details-image")
   }
 
   const navButtonsContainer = document.createElement("div")

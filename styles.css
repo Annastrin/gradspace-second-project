@@ -222,7 +222,8 @@ img {
     height: 3rem;
   }
 
-  .carousel-item img {
+  .carousel-item img,
+  .product-details-image {
     height: 560px;
     object-fit: cover;
   }
